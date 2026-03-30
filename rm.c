@@ -8,7 +8,7 @@
 static void
 usage(void)
 {
-	eprintf("usage: %s [-f] [-iRr] file ...\n", argv0);
+	eprintf("usage: %s [-fv] [-iRr] file ...\n", argv0);
 }
 
 static int
@@ -57,6 +57,9 @@ main(int argc, char *argv[])
 		break;
 	case 'i':
 		r.flags |= CONFIRM;
+		break;
+	case 'v':
+		rm_vflag = 1;
 		break;
 	case 'R':
 	case 'r':

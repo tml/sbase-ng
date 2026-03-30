@@ -10,6 +10,7 @@
 #include "../util.h"
 
 int rm_status = 0;
+int rm_vflag  = 0;
 
 void
 rm(int dirfd, const char *name, struct stat *st, void *data, struct recursor *r)
@@ -39,6 +40,8 @@ rm(int dirfd, const char *name, struct stat *st, void *data, struct recursor *r)
 
 	if (unlinkat(dirfd, name, flags) < 0)
 		goto err;
+	if (rm_vflag)
+		printf("removed '%s'\n", r->path);
 	return;
 
 err:
