@@ -9,16 +9,21 @@
 #include "util.h"
 
 static int mv_status = 0;
+static int mv_vflag  = 0;
 
 static int
 mv(const char *s1, const char *s2, int depth)
 {
 	struct recursor r = { .fn = rm, .follow = 'P', .flags = SILENT };
 
-	if (!rename(s1, s2))
+	if (!rename(s1, s2)) {
+		if (mv_vflag)
+			printf("%s -> %s\n", s1, s2);
 		return 0;
+	}
 	if (errno == EXDEV) {
 		cp_aflag = cp_rflag = cp_pflag = 1;
+		cp_vflag = mv_vflag;
 		cp_follow = 'P';
 		cp_status = 0;
 		rm_status = 0;
@@ -38,7 +43,7 @@ mv(const char *s1, const char *s2, int depth)
 static void
 usage(void)
 {
-	eprintf("usage: %s [-f] source ... dest\n", argv0);
+	eprintf("usage: %s [-fv] source ... dest\n", argv0);
 }
 
 int
@@ -48,6 +53,9 @@ main(int argc, char *argv[])
 
 	ARGBEGIN {
 	case 'f':
+		break;
+	case 'v':
+		mv_vflag = 1;
 		break;
 	default:
 		usage();
